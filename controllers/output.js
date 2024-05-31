@@ -8,9 +8,17 @@ export const getAllOutputs = async (req, res) => {
       const data = result.rows.map((row) => {
         const obj = {};
         result.metaData.forEach((column, index) => {
-          obj[column.name] = row[index];
-        });
-        return obj;
+          let value = row[index];
+          if (column.name === "SAL_FECHASALIDA") {
+              const date = new Date(value);
+              value = date.toISOString().split('T')[0];
+          }
+          else if (!req.body.ent_fechaentrada) {
+              req.body.ent_fechaentrada = new Date().toISOString().split('T')[0];
+          }
+          obj[column.name] = value;
+      });
+      return obj;
       });
       res.json(data);
     } catch (error) {
@@ -92,7 +100,7 @@ export const updateOutputs = async (req, res) => {
             UPDATE SALIDA_ITO 
             SET 
                 PRO_ID = :1,
-                SAL_FECHASALIDA = :2, 
+                SAL_FECHASALIDA = TO_DATE(:2, 'YYYY-MM-DD'), 
                 SAL_MOVIMIENTO = :3, 
                 SAL_UNIDADMEDIDA = :4, 
                 SAL_CANTIDAD = :5, 
