@@ -91,17 +91,17 @@ export const updateEntry = async (req, res) => {
         const connection = await connectToDB();
         // Consulta SQL para Oracle
         const sql = `
-            UPDATE ENTRADA_ITO 
-            SET 
-                PRO_ID = :2, 
-                ENT_FECHAENTRADA= :3, 
-                ENT_MOVIMIENTO = :4, 
-                ENT_UNIDADMEDIDA = :5,
-                ENT_CANTIDAD = :6,
-                ENT_PRECIOSALIDA = :7,
-                PRV_ID = :8
-            WHERE 
-                ENT_ID = :id
+            UPDATE ENTRADA_ITO
+            SET
+            PRO_ID = :2,
+            ENT_FECHAENTRADA = TO_DATE(:3, 'YYYY-MM-DD'),
+            ENT_MOVIMIENTO = :4,
+            ENT_UNIDADMEDIDA = :5,
+            ENT_CANTIDAD = :6,
+            ENT_PRECIOSALIDA = :7,
+            PRV_ID = :8
+        WHERE
+            ENT_ID = :id
         `;
         console.log('Consulta SQL:', sql);
 
